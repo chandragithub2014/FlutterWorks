@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main(){
    runApp(new MaterialApp(
@@ -47,6 +48,36 @@ int _index = 0;
 String _updateButtonVal = "";
 void _onNavBarUpdateButtonClicked(String _val)=>setState(()=>_updateButtonVal  = "Clicked on Button$_val");
 
+void _showBottomSheet(){
+  showModalBottomSheet<void>(context: context,
+      builder: (BuildContext context){
+         return new Container(
+           padding: new EdgeInsets.all(15.0),
+           child: new Column(
+             children: <Widget>[
+               new Text("Do You Want to Save ?"),
+               new RaisedButton(onPressed: ()=>Navigator.pop(context),child: new Text("Yes "),),
+               new RaisedButton(onPressed: ()=>Navigator.pop(context),child: new Text("No "),),
+             ],
+           ),
+         );
+      });
+}
+
+  final GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
+  void showSnackBar(){
+    _scaffoldState.currentState.showSnackBar(new SnackBar(content: new Text("This is Snack Bar")));
+  }
+  Future _showAlertDialog(BuildContext context , String  message)async{
+        return showDialog(context: context,child:
+        new AlertDialog(title: new Text(message),
+        actions: <Widget>[
+          new FlatButton(onPressed: ()=>Navigator.pop(context), child: new Text("Yes")),
+          new FlatButton(onPressed: ()=>Navigator.pop(context), child: new Text("Cancel")),
+
+        ],)
+        );
+  }
   @override
   void initState() {
     _items = new List();
@@ -55,9 +86,13 @@ void _onNavBarUpdateButtonClicked(String _val)=>setState(()=>_updateButtonVal  =
     _items.add(new BottomNavigationBarItem(icon: new Icon(Icons.message),title:new Text("Messages"),backgroundColor: Colors.lightBlue));
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key:_scaffoldState,
       appBar: new AppBar(
         title: new Text("Hello AppBar",style: new TextStyle(fontWeight: FontWeight.bold,color: Colors.deepOrangeAccent,
             fontSize: 22.0)),
@@ -111,7 +146,11 @@ void _onNavBarUpdateButtonClicked(String _val)=>setState(()=>_updateButtonVal  =
               new Text("Floating Button CurrentDate:$_currentDate"),
               new Text("Clicked Footer Button $_clickedButton"),
               new Text("Selected Bottom Navigation Bar Items::$_value"),
-              new Text("Clicked $_updateButtonVal")
+              new Text("Clicked $_updateButtonVal"),
+              new RaisedButton(onPressed: _showBottomSheet,child: new Text("Show BottomSheet"),),
+              new RaisedButton(onPressed: showSnackBar,child: new Text("Click to show SnackBar"),),
+              new RaisedButton(onPressed: ()=>_showAlertDialog(context, "Do You like the film ?"),child: new Text("Show Alert Dialog"),),
+
             ],
           ),
         ),
