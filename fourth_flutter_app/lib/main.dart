@@ -40,6 +40,21 @@ Widget makeFooterWidgets(){
 }
 String _clickedButton = "";
 void _onFooterButtonClicked(String _val)=>setState(()=>_clickedButton=_val);
+List<BottomNavigationBarItem> _items ;
+String _value = "";
+int _index = 0;
+
+String _updateButtonVal = "";
+void _onNavBarUpdateButtonClicked(String _val)=>setState(()=>_updateButtonVal  = "Clicked on Button$_val");
+
+  @override
+  void initState() {
+    _items = new List();
+    _items.add(new BottomNavigationBarItem(icon: new Icon(Icons.people),title:new Text("People"),backgroundColor: Colors.lightBlue));
+    _items.add(new BottomNavigationBarItem(icon: new Icon(Icons.person),title:new Text("Person"),backgroundColor: Colors.lightBlue));
+    _items.add(new BottomNavigationBarItem(icon: new Icon(Icons.message),title:new Text("Messages"),backgroundColor: Colors.lightBlue));
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -67,6 +82,7 @@ void _onFooterButtonClicked(String _val)=>setState(()=>_clickedButton=_val);
             children: <Widget>[
               new Icon(Icons.people),
               new Text("Item1"),
+              new RaisedButton(onPressed: ()=>_onNavBarUpdateButtonClicked("Clicked Nav Bar Button"), child: new Text("Update"),),
               new RaisedButton(onPressed: ()=>Navigator.pop(context),child: new Text("Close"),)
               
             ],
@@ -76,22 +92,34 @@ void _onFooterButtonClicked(String _val)=>setState(()=>_clickedButton=_val);
       persistentFooterButtons: <Widget>[
         makeFooterWidgets(),
       ],
+      bottomNavigationBar: new BottomNavigationBar(items: _items,
+      fixedColor: Colors.deepOrange,
+      currentIndex: _index,
+      onTap: (int item){
+        setState(() {
+          _index = item;
+          _value = "Clicked on ${_index.toString()}";
+        });
+      },),
       body: new Container(
         padding: new EdgeInsets.all(32.0),
         child: new Center(
           child: new Column(
             children: <Widget>[
 
-              new Text("$_val"),
-              new Text("CurrentDate:$_currentDate"),
-              new Text("Clicked Footer Button $_clickedButton")
+              new Text("Nav Bar +/- = $_val"),
+              new Text("Floating Button CurrentDate:$_currentDate"),
+              new Text("Clicked Footer Button $_clickedButton"),
+              new Text("Selected Bottom Navigation Bar Items::$_value"),
+              new Text("Clicked $_updateButtonVal")
             ],
           ),
         ),
       ),
+      
     );
   }
 
 }
 
-
+//Add a Drawer, in the Drawer add a button, when the button is clicked it should update a Text widget on the main page with the current date and time
